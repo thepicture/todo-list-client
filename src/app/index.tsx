@@ -1,12 +1,9 @@
-import { Card, Typography } from '@mui/material';
+import { Routing } from 'pages';
 import React from 'react';
 
 import './index.scss';
+import { withProviders } from './providers';
 
-export const App = () => {
-	return (
-		<Card>
-			<Typography>Initial</Typography>
-		</Card>
-	);
-};
+const App = () => <Routing />;
+
+export default withProviders(App);
