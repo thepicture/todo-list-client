@@ -1,4 +1,4 @@
-import { Input, Button } from '@mui/material';
+import { Input, Button, TextField } from '@mui/material';
 import { when } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
@@ -31,15 +31,15 @@ export const Auth = observer(() => {
 			<Card>
 				<Logo />
 				<Heading>Вход в систему</Heading>
-				<Input
-					placeholder="Логин"
+				<TextField
+					label="Логин"
 					autoComplete="username"
 					name="login"
 					value={fields.login}
 					onChange={handleChange}
 				/>
-				<Input
-					placeholder="Пароль"
+				<TextField
+					label="Пароль"
 					type="password"
 					autoComplete="current-password"
 					name="password"
