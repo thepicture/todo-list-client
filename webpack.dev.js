@@ -7,28 +7,31 @@ module.exports = {
 	mode: 'development',
 	output: {
 		path: path.resolve(__dirname, './dist'),
-		filename: 'index_bundle.js',
+		filename: 'bundle.js',
+		publicPath: '/',
 	},
 	target: 'web',
 	devServer: {
-		port: '5000',
+		port: '8000',
 		static: {
 			directory: path.join(__dirname, 'public'),
 		},
 		open: true,
 		hot: true,
 		liveReload: true,
+		historyApiFallback: true,
 	},
+	devtool: 'source-map',
 	resolve: {
-		extensions: ['.js', '.tsx', '.json'],
+		extensions: ['.js', '.jsx', '.ts', '.tsx'],
 		plugins: [new TsconfigPathsPlugin()],
 	},
 	module: {
 		rules: [
 			{
-				test: /\.(ts|tsx)$/,
+				test: /\.tsx?$/,
 				exclude: /node_modules/,
-				use: 'babel-loader',
+				use: 'ts-loader',
 			},
 			{
 				test: /\.s[ac]ss$/,
