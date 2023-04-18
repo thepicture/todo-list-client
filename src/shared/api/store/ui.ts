@@ -1,4 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx';
+import { makePersistable } from 'mobx-persist-store';
 
 import { RootStore } from './model';
 

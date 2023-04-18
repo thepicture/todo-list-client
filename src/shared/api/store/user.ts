@@ -1,6 +1,18 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
+
 import { TOMORROW } from './config';
 import { RootStore } from './model';
+
+export type User = {
+	firstName: string;
+	lastName: string;
+	patronymic: string;
+
+	login: string;
+	password: string;
+
+	director?: User;
+};
 
 export class UserStore {
 	rootStore: RootStore;
@@ -19,10 +31,12 @@ export class UserStore {
 			.then(async (response) => {
 				if (response.ok) {
 					const body = await response.json();
-					this.rootStore.currentUser = {
-						...body,
-						expiresAtTimestamp: TOMORROW(),
-					};
+					runInAction(() => {
+						this.rootStore.currentUser = {
+							...body,
+							expiresAtTimestamp: TOMORROW(),
+						};
+					});
 
 					this.rootStore.uiStore.notify('Вход выполнен');
 					return;

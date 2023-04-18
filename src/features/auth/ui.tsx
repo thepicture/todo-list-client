@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import { Button, TextField, useMediaQuery } from '@mui/material';
+
+import { useNavigate } from 'react-router-dom';
 
 import { observer } from 'mobx-react-lite';
 
+import { userModel } from 'entities/user';
 import { storeApi } from 'shared/api';
-import { MOBILE_SCREEN } from 'shared/config';
-import { Card, Heading, Logo } from 'shared/ui/presentational';
+import { MOBILE_SCREEN, TASKS_PATH } from 'shared/config';
+import { CardContainer } from 'shared/ui/container';
+import { Heading, Logo } from 'shared/ui/presentational';
 
 export const Auth = observer(() => {
 	const { userStore } = storeApi.useStoreContext();
+	const { isLoggedIn } = userModel.useSession();
+
+	const navigate = useNavigate();
 
 	const [fields, setFields] = useState({
 		login: '',
@@ -16,6 +24,12 @@ export const Auth = observer(() => {
 	});
 
 	const isMobileScreen = useMediaQuery(MOBILE_SCREEN);
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			navigate(TASKS_PATH);
+		}
+	}, [isLoggedIn]);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
@@ -43,7 +57,7 @@ export const Auth = observer(() => {
 				},
 			}}
 		>
-			<Card noBordersOnMobile>
+			<CardContainer noBordersOnMobile>
 				<Logo />
 				<Heading>Вход в систему</Heading>
 				<TextField
@@ -62,7 +76,7 @@ export const Auth = observer(() => {
 					onChange={handleChange}
 				/>
 				<Button type="submit">Войти</Button>
-			</Card>
+			</CardContainer>
 		</form>
 	);
 });
