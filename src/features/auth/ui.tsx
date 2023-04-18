@@ -1,16 +1,21 @@
-import { Input, Button, TextField } from '@mui/material';
-import { when } from 'mobx';
-import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
+import { Button, TextField, useMediaQuery } from '@mui/material';
+
+import { observer } from 'mobx-react-lite';
+
 import { storeApi } from 'shared/api';
+import { MOBILE_SCREEN } from 'shared/config';
 import { Card, Heading, Logo } from 'shared/ui/presentational';
 
 export const Auth = observer(() => {
+	const { userStore } = storeApi.useStoreContext();
+
 	const [fields, setFields] = useState({
 		login: '',
 		password: '',
 	});
-	const { userStore } = storeApi.useStoreContext();
+
+	const isMobileScreen = useMediaQuery(MOBILE_SCREEN);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
@@ -27,8 +32,18 @@ export const Auth = observer(() => {
 				event.preventDefault();
 				userStore.authenticate(fields.login, fields.password);
 			}}
+			style={{
+				minWidth: isMobileScreen ? 'unset' : 500,
+				...{
+					...(isMobileScreen && {
+						position: 'fixed',
+						left: 0,
+						width: '100vw',
+					}),
+				},
+			}}
 		>
-			<Card>
+			<Card noBordersOnMobile>
 				<Logo />
 				<Heading>Вход в систему</Heading>
 				<TextField

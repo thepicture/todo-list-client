@@ -24,14 +24,14 @@ export class UserStore {
 						expiresAtTimestamp: TOMORROW(),
 					};
 
-					alert('Вход выполнен');
+					this.rootStore.uiStore.notify('Вход выполнен');
 					return;
 				}
 
-				alert(await response.text());
+				this.rootStore.uiStore.notify(await response.text());
 			})
 			.catch((error) => {
-				alert(error.message);
+				this.rootStore.uiStore.notify(error.message);
 			});
 	}
 }

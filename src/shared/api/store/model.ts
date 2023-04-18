@@ -7,6 +7,7 @@ import { UserStore } from './user';
 
 import * as todoApi from 'shared/api/todoapi';
 import { makeObservable, observable } from 'mobx';
+import { UiStore } from './ui';
 
 export type ISessionUser = {
 	id: number;
@@ -21,6 +22,8 @@ export type ISessionUser = {
 export class RootStore {
 	userStore: UserStore;
 	todoStore: TodoStore;
+	uiStore: UiStore;
+
 	transportLayer: typeof todoApi;
 
 	currentUser: ISessionUser = null;
@@ -28,6 +31,7 @@ export class RootStore {
 	constructor() {
 		this.userStore = new UserStore(this);
 		this.todoStore = new TodoStore(this);
+		this.uiStore = new UiStore(this);
 		this.transportLayer = todoApi;
 
 		makeObservable(this, {

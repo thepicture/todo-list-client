@@ -10,6 +10,7 @@ const BASE_URL =
 export const Routing = () => (
 	<Routes>
 		<Route path={`${BASE_URL}/auth`} element={<AuthPage />} />
+		<Route path={`${BASE_URL}/todos`} element={<AuthPage />} />
 		<Route path="*" element={<Navigate to={`${BASE_URL}/auth`} />} />
 	</Routes>
 );
