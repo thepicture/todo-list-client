@@ -8,6 +8,6 @@ const Centered = styled('section')(() => ({
 	height: '100vh',
 }));
 
-export const CenteredLayout = ({ children }: { children: React.ReactNode }) => {
-	return <Centered>{children}</Centered>;
-};
+export const CenteredLayout = ({ children }: { children: React.ReactNode }) => (
+	<Centered>{children}</Centered>
+);

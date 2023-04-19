@@ -1,1 +1,1 @@
-export * from './ui';
+export { Auth as AuthContainer } from './ui';

@@ -1,9 +1,27 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
+
 import { TOMORROW } from './config';
 import { RootStore } from './model';
 
+export type User = {
+	id: number;
+
+	firstName: string;
+	lastName: string;
+	patronymic: string;
+
+	login: string;
+	password: string;
+
+	director?: User;
+};
+
 export class UserStore {
 	rootStore: RootStore;
+
+	responsibleUsers = [];
+	areResponsibleUsersLoading = false;
+	error: string = null;
 
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;
@@ -19,19 +37,38 @@ export class UserStore {
 			.then(async (response) => {
 				if (response.ok) {
 					const body = await response.json();
-					this.rootStore.currentUser = {
-						...body,
-						expiresAtTimestamp: TOMORROW(),
-					};
+					runInAction(() => {
+						this.rootStore.currentUser = {
+							...body,
+							expiresAtTimestamp: TOMORROW(),
+						};
+					});
 
-					alert('Вход выполнен');
+					this.rootStore.uiStore.notify('Вход выполнен');
 					return;
 				}
 
-				alert(await response.text());
+				this.rootStore.uiStore.notify(await response.text());
 			})
 			.catch((error) => {
-				alert(error.message);
+				this.rootStore.uiStore.notify(error.message);
+			});
+	}
+
+	loadResponsibleUsers() {
+		this.rootStore.transportLayer
+			.getMyResponsibleUsers()
+			.then((users) => {
+				runInAction(() => {
+					this.responsibleUsers = users;
+					this.areResponsibleUsersLoading = false;
+				});
+			})
+			.catch((error: Error) => {
+				runInAction(() => {
+					this.error = error.message || 'Неизвестная ошибка';
+					this.areResponsibleUsersLoading = false;
+				});
 			});
 	}
 }

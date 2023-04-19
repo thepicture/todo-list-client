@@ -2,11 +2,13 @@ import { createContext, useContext } from 'react';
 
 import { makePersistable } from 'mobx-persist-store';
 
-import { TodoStore } from './todo';
+import { TaskStore } from './task';
 import { UserStore } from './user';
 
 import * as todoApi from 'shared/api/todoapi';
-import { makeObservable, observable } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
+
+import { UiStore } from './ui';
 
 export type ISessionUser = {
 	id: number;
@@ -16,28 +18,43 @@ export type ISessionUser = {
 	login: string;
 	expiresAtTimestamp: number;
 	director?: ISessionUser;
+	directorId?: number;
 };
 
 export class RootStore {
 	userStore: UserStore;
-	todoStore: TodoStore;
+	taskStore: TaskStore;
+	uiStore: UiStore;
+
 	transportLayer: typeof todoApi;
 
 	currentUser: ISessionUser = null;
 
 	constructor() {
 		this.userStore = new UserStore(this);
-		this.todoStore = new TodoStore(this);
+		this.taskStore = new TaskStore(this);
+		this.uiStore = new UiStore(this);
 		this.transportLayer = todoApi;
 
 		makeObservable(this, {
 			currentUser: observable,
+			isCurrentUserDirector: computed,
 		});
 
 		makePersistable(this, {
 			name: 'RootStore',
 			properties: ['currentUser'],
 			storage: localStorage,
+		});
+	}
+
+	get isCurrentUserDirector() {
+		return this.currentUser.directorId === null;
+	}
+
+	signout() {
+		runInAction(() => {
+			this.currentUser = null;
 		});
 	}
 }

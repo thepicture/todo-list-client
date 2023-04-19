@@ -1,13 +1,13 @@
-import { Auth } from 'features/auth';
 import React from 'react';
+
 import { CenteredLayout } from 'shared/ui/presentational';
 
-const AuthPage = () => {
-	return (
-		<CenteredLayout>
-			<Auth />
-		</CenteredLayout>
-	);
-};
+import { AuthContainer } from 'features/auth';
+
+const AuthPage = () => (
+	<CenteredLayout>
+		<AuthContainer />
+	</CenteredLayout>
+);
 
 export default AuthPage;
