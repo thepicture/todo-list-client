@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable, runInAction } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 import {
 	DEFAULT_FILTER,
@@ -8,6 +8,8 @@ import {
 import { RootStore } from './model';
 import { User } from './user';
 import { makePersistable } from 'mobx-persist-store';
+import { storeApi } from '..';
+import { DEFAULT_EDITING_TASK } from './config';
 
 export type Task = {
 	id: number;
@@ -32,6 +34,8 @@ export class TaskStore {
 	filter: FilterEntry = getFilterById(DEFAULT_FILTER);
 	error: string = '';
 
+	editingTask?: storeApi.Task = DEFAULT_EDITING_TASK();
+
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;
 
@@ -41,7 +45,7 @@ export class TaskStore {
 
 		makePersistable(this, {
 			name: 'TaskStore',
-			properties: ['tasks'],
+			properties: ['tasks', 'editingTask'],
 			storage: localStorage,
 		});
 	}
@@ -68,7 +72,54 @@ export class TaskStore {
 		return getFilterById(this.filter.id).map(this.tasks);
 	}
 
+	get canTaskSave() {
+		return (
+			Boolean(this.editingTask) &&
+			this.editingTask.title &&
+			this.editingTask.priority &&
+			this.editingTask.status &&
+			this.editingTask.responsibleUserId
+		);
+	}
+
+	get isNewTask() {
+		return this.editingTask.id === 0;
+	}
+
+	get canUserChangeTask() {
+		if (!this.rootStore.isCurrentUserDirector && !this.isNewTask) {
+			return false;
+		}
+
+		return true;
+	}
+
 	applyFilter(filter: FilterEntry) {
 		this.filter = filter;
+	}
+
+	saveTask() {
+		console.log(this.editingTask.responsibleUserId);
+		this.rootStore.transportLayer
+			.saveTask(this.editingTask)
+			.then(async (response) => {
+				if (response.ok) {
+					runInAction(() => {
+						this.rootStore.uiStore.isTaskFormOpen = false;
+						this.editingTask = null;
+						this.loadTasks();
+						this.rootStore.uiStore.notify('Задача сохранена');
+					});
+				} else {
+					this.rootStore.uiStore.notify(await response.text());
+				}
+			})
+			.catch((error: Error) => {
+				this.rootStore.uiStore.notify(
+					`Не удалось сохранить задачу. ${
+						error.message || 'Неизвестная ошибка'
+					}`
+				);
+			});
 	}
 }

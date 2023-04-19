@@ -28,17 +28,23 @@ export const Filters = observer(() => {
 					onOpen={() => setIsSelectOpen(true)}
 					onClose={() => setIsSelectOpen(false)}
 				>
-					{filterList.map(({ id, title }) => (
-						<MenuItem
-							key={id}
-							value={id}
-							onClick={() => {
-								taskStore.applyFilter(getFilterById(id));
-							}}
-						>
-							<em>{title}</em>
-						</MenuItem>
-					))}
+					{filterList
+						.filter((filter) =>
+							filter.forDirectorOnly
+								? taskStore.rootStore.isCurrentUserDirector
+								: true
+						)
+						.map(({ id, title }) => (
+							<MenuItem
+								key={id}
+								value={id}
+								onClick={() => {
+									taskStore.applyFilter(getFilterById(id));
+								}}
+							>
+								<em>{title}</em>
+							</MenuItem>
+						))}
 				</Select>
 			</Tooltip>
 		</FormControl>

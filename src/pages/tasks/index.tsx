@@ -16,6 +16,7 @@ import { AUTH_PATH } from 'shared/config';
 import { Loading } from 'processes/loading';
 import { TaskFilters } from 'features/task-filters';
 import { storeApi } from 'shared/api';
+import { TaskForm } from 'features/change-task';
 
 const TasksPage = observer(() => {
 	const navigate = useNavigate();
@@ -30,10 +31,20 @@ const TasksPage = observer(() => {
 
 	return (
 		<>
+			<TaskForm />
 			<Header title="Задачи" logo={<Logo />}>
 				<TaskFilters />
 				<Tooltip title="Назначить новую задачу в список">
-					<Button variant="outlined">Новая задача</Button>
+					{taskStore.rootStore.isCurrentUserDirector ? (
+						<Button
+							variant="outlined"
+							onClick={() => taskStore.rootStore.uiStore.openTaskForm()}
+						>
+							Новая задача
+						</Button>
+					) : (
+						<></>
+					)}
 				</Tooltip>
 				<Tooltip
 					title="Выйти из аккаунта"
@@ -66,7 +77,11 @@ const TasksPage = observer(() => {
 					Object.keys(tasks).map((groupKey) => (
 						<section
 							key={groupKey}
-							style={{ display: 'flex', flexDirection: 'column', gap: 4 }}
+							style={{
+								display: 'flex',
+								flexDirection: 'column',
+								gap: 4,
+							}}
 						>
 							<Heading>{tasks[groupKey].key}</Heading>
 							<section

@@ -10,8 +10,10 @@ export const Task = ({ children }: { children: React.ReactNode }) => {
 			display={Array.isArray(taskStore.filteredTasks) ? 'grid' : 'block'}
 			gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
 			gap={2}
-			pt={8}
-			m={2}
+			pt={6}
+			pr={2}
+			pb={2}
+			pl={2}
 		>
 			{children}
 		</Box>

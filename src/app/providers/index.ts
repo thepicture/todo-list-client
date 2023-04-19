@@ -1,4 +1,5 @@
 import compose from 'compose-function';
+import { withLocalization } from './with-localization';
 import { withNotifications } from './with-notifications';
 
 import { withRouter } from './with-router';
@@ -9,5 +10,6 @@ export const withProviders = compose(
 	withRouter,
 	withTheme,
 	withStore,
-	withNotifications
+	withNotifications,
+	withLocalization
 );

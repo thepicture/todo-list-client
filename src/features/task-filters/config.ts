@@ -86,4 +86,4 @@ export const getFilterById = (id: number) => filters[id];
 
 export const filterList = Object.values(filters);
 
-export const DEFAULT_FILTER = 1;
+export const DEFAULT_FILTER = 3;

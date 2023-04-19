@@ -6,7 +6,7 @@ import { TaskStore } from './task';
 import { UserStore } from './user';
 
 import * as todoApi from 'shared/api/todoapi';
-import { makeObservable, observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { UiStore } from './ui';
 
@@ -18,6 +18,7 @@ export type ISessionUser = {
 	login: string;
 	expiresAtTimestamp: number;
 	director?: ISessionUser;
+	directorId?: number;
 };
 
 export class RootStore {
@@ -37,6 +38,7 @@ export class RootStore {
 
 		makeObservable(this, {
 			currentUser: observable,
+			isCurrentUserDirector: computed,
 		});
 
 		makePersistable(this, {
@@ -44,6 +46,10 @@ export class RootStore {
 			properties: ['currentUser'],
 			storage: localStorage,
 		});
+	}
+
+	get isCurrentUserDirector() {
+		return this.currentUser.directorId === null;
 	}
 
 	signout() {

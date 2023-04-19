@@ -19,6 +19,10 @@ export type User = {
 export class UserStore {
 	rootStore: RootStore;
 
+	responsibleUsers = [];
+	areResponsibleUsersLoading = false;
+	error: string = null;
+
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;
 
@@ -48,6 +52,23 @@ export class UserStore {
 			})
 			.catch((error) => {
 				this.rootStore.uiStore.notify(error.message);
+			});
+	}
+
+	loadResponsibleUsers() {
+		this.rootStore.transportLayer
+			.getMyResponsibleUsers()
+			.then((users) => {
+				runInAction(() => {
+					this.responsibleUsers = users;
+					this.areResponsibleUsersLoading = false;
+				});
+			})
+			.catch((error: Error) => {
+				runInAction(() => {
+					this.error = error.message || 'Неизвестная ошибка';
+					this.areResponsibleUsersLoading = false;
+				});
 			});
 	}
 }
