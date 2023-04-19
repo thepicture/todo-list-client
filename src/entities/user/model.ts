@@ -1,10 +1,7 @@
-type User = {
-	firstName: string;
-	lastName: string;
-	patronymic: string;
+import { storeApi } from 'shared/api';
 
-	login: string;
-	password: string;
+export const useSession = () => {
+	const { currentUser } = storeApi.useStoreContext();
 
-	director: User;
+	return { isLoggedIn: currentUser?.expiresAtTimestamp > Date.now() };
 };

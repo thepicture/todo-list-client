@@ -1,11 +1,15 @@
+import React from 'react';
+
 import { createTheme, ThemeProvider } from '@mui/material';
 import { green } from '@mui/material/colors';
-import React from 'react';
 
 const theme = createTheme({
 	palette: {
 		primary: {
 			main: green[500],
+		},
+		secondary: {
+			main: '#fff',
 		},
 	},
 	components: {
