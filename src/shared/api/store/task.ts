@@ -1,6 +1,13 @@
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeAutoObservable, observable, runInAction } from 'mobx';
+
+import {
+	DEFAULT_FILTER,
+	FilterEntry,
+	getFilterById,
+} from 'features/task-filters';
 import { RootStore } from './model';
 import { User } from './user';
+import { makePersistable } from 'mobx-persist-store';
 
 export type Task = {
 	id: number;
@@ -14,6 +21,7 @@ export type Task = {
 	priority: string;
 	status: string;
 
+	responsibleUserId: number;
 	responsibleUser: User;
 };
 
@@ -21,6 +29,7 @@ export class TaskStore {
 	rootStore: RootStore;
 	isLoading: boolean = false;
 	tasks: Task[] = [];
+	filter: FilterEntry = getFilterById(DEFAULT_FILTER);
 	error: string = '';
 
 	constructor(rootStore: RootStore) {
@@ -28,6 +37,12 @@ export class TaskStore {
 
 		makeAutoObservable(this, {
 			rootStore: false,
+		});
+
+		makePersistable(this, {
+			name: 'TaskStore',
+			properties: ['tasks'],
+			storage: localStorage,
 		});
 	}
 
@@ -47,5 +62,13 @@ export class TaskStore {
 					this.isLoading = false;
 				});
 			});
+	}
+
+	get filteredTasks() {
+		return getFilterById(this.filter.id).map(this.tasks);
+	}
+
+	applyFilter(filter: FilterEntry) {
+		this.filter = filter;
 	}
 }

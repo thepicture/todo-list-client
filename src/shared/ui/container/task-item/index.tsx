@@ -4,17 +4,17 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import { Box } from '@mui/material';
 
 import InsertInvitationIcon from '@mui/icons-material/InsertInvitation';
 
 import { storeApi } from 'shared/api';
-import { DATE_LOCALE, DATE_OPTIONS, TaskStatuses } from './config';
 import { CardButton } from 'shared/ui/presentational/card-button';
 import { Avatar, Priority, Row, Status } from 'shared/ui/presentational';
-import { Box } from '@mui/material';
+import { DATE_LOCALE, DATE_OPTIONS, TaskStatuses } from './config';
 
 export const TaskItem = ({ task }: { task: storeApi.Task }) => (
-	<Card>
+	<Card tabIndex={0}>
 		<CardButton>
 			<CardHeader
 				avatar={

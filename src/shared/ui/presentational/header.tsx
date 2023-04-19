@@ -7,9 +7,11 @@ import Typography from '@mui/material/Typography';
 
 export const Header = ({
 	title,
+	logo,
 	children,
 }: {
 	title: string;
+	logo: React.ReactNode;
 	children: React.ReactNode;
 }) => (
 	<Box sx={{ flexGrow: 1 }}>
@@ -21,7 +23,10 @@ export const Header = ({
 					sx={{ flexGrow: 1 }}
 					color="secondary"
 				>
-					{title}
+					<Box display="flex" alignItems="center" gap={2}>
+						{logo}
+						{title}
+					</Box>
 				</Typography>
 				{children}
 			</Toolbar>

@@ -4,6 +4,8 @@ import { TOMORROW } from './config';
 import { RootStore } from './model';
 
 export type User = {
+	id: number;
+
 	firstName: string;
 	lastName: string;
 	patronymic: string;
