@@ -10,5 +10,6 @@ export const DEFAULT_EDITING_TASK = () => ({
 	creationTimestamp: 0,
 	updateTimestamp: 0,
 	responsibleUserId: 0,
+	creatorId: 0,
 	responsibleUser: null,
 });

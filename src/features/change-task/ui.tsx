@@ -139,8 +139,7 @@ export const Form = observer(() => {
 							<Paragraph>
 								Ошибка при подгрузке подчинённых. {rootStore.userStore.error}
 							</Paragraph>
-						) : rootStore.taskStore.editingTask.responsibleUserId ===
-						  0 ? null : (
+						) : (
 							<Select
 								labelId="responsible"
 								value={

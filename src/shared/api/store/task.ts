@@ -23,6 +23,7 @@ export type Task = {
 	priority: string;
 	status: string;
 
+	creatorId: number;
 	responsibleUserId: number;
 	responsibleUser: User;
 };
@@ -99,7 +100,6 @@ export class TaskStore {
 	}
 
 	saveTask() {
-		console.log(this.editingTask.responsibleUserId);
 		this.rootStore.transportLayer
 			.saveTask(this.editingTask)
 			.then(async (response) => {

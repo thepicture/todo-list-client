@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import { storeApi } from '..';
-import { DEFAULT_EDITING_TASK, TOMORROW } from './config';
+import { DEFAULT_EDITING_TASK } from './config';
 
 import { RootStore } from './model';
 
